@@ -13,7 +13,7 @@ pipeline {
 				
 		stage(build) {
 			steps {
-				sh 'mvn package'
+				sh '/opt/maven/bin/mvn package'
 			}
 		}
 		stage(deploy) {
