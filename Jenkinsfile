@@ -1,16 +1,11 @@
 pipeline {
 	agent any
 	stages {
-		stage('pull') {
+		stage('GIT-Stage') {
 			steps {
-				checkout(
-				[$class: 'GitSCM',
-				branches: [[name: '*/master']],
-				extensions: [],
-				userRemoteConfigs: [[credentialsId: 'github-creds', url: 'https://github.com/iamsatya/ArchitectUI-WebAPP.git']]])
+				git credentialsId: 'github-creds', url: 'https://github.com/iamsatya/ArchitectUI-WebAPP.git'
 			}
 		}
-				
 		stage(build) {
 			steps {
 				sh '/opt/maven/bin/mvn package'
@@ -18,7 +13,8 @@ pipeline {
 		}
 		stage(deploy) {
 			steps {
-				deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: 'http://35.154.159.251:8080')], contextPath: 'pipe', war: 'target/*.war'
+				deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: 'http://13.126.252.30:8080')],
+				contextPath: 'demo-pipeline', war: 'target/*.war'
 				}
 			}
 		}
