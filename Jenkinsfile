@@ -1,20 +1,37 @@
 pipeline {
 	agent any
 	stages {
-		stage('GIT-Stage') {
+		stage('github') {
 			steps {
-				git credentialsId: 'github-creds', url: 'https://github.com/iamsatya/ArchitectUI-WebAPP.git'
+				git credentialsId: 'git-creds', url: 'https://github.com/iamsatya/ArchitectUI-WebAPP.git'
 			}
 		}
-		stage(build) {
+		
+		stage(maven) {
 			steps {
 				sh '/opt/maven/bin/mvn package'
 			}
 		}
-		stage(deploy) {
+		
+		stage(nexus) {
 			steps {
-				deploy adapters: [tomcat8(credentialsId: 'tomcat', path: '', url: 'http://13.126.252.30:8080')],
-				contextPath: 'demo-pipeline', war: 'target/*.war'
+				nexusPublisher nexusInstanceId: 'nexus-repo',
+				nexusRepositoryId: '',
+				packages: [[$class: 'MavenPackage',
+				mavenAssetList: [[classifier: '',
+				extension: '', filePath: '{WORKSPACE}/target/*.war']],
+				mavenCoordinate: [artifactId: 'watr',
+				groupId: 'com.govanin', packaging: 'war',
+				version: '1.0']]], tagName: '1.0'
+			}
+		}
+		stage(tomcat) {
+			steps {
+				deploy adapters: [tomcat8(credentialsId: 'tomcat-creds',
+				path: '',
+				url: 'http://13.233.254.93:8080/')],
+				contextPath: 'webapp',
+				war: 'target/*.war'
 				}
 			}
 		}
