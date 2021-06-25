@@ -13,18 +13,6 @@ pipeline {
 			}
 		}
 		
-		stage(nexus) {
-			steps {
-				nexusPublisher nexusInstanceId: 'nexus-repo',
-				nexusRepositoryId: '',
-				packages: [[$class: 'MavenPackage',
-				mavenAssetList: [[classifier: '',
-				extension: '', filePath: '{WORKSPACE}/target/*.war']],
-				mavenCoordinate: [artifactId: 'watr',
-				groupId: 'com.govanin', packaging: 'war',
-				version: '1.0']]], tagName: '1.0'
-			}
-		}
 		stage(tomcat) {
 			steps {
 				deploy adapters: [tomcat8(credentialsId: 'tomcat-creds',
