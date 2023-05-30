@@ -1,0 +1,38 @@
+pipeline { 
+	agent any
+	stages {
+		stage("pull code from github") {
+			steps {
+				git 'https://github.com/iamsatya/ArchitectUI-WebAPP.git'
+			}
+		
+		}
+		stage("CI Stage") {
+			steps {
+				sh "mvn compile"
+			}
+		
+		}
+		
+		stage("CI Stage") {
+			steps {
+				sh "mvn package"
+			}
+		
+		}
+		
+		stage("Deploy to APP Server") {
+			steps {
+				deploy adapters: [tomcat9(credentialsId: 'tomcat', path: '',
+				url: 'http://18.60.185.195:8080')],
+				contextPath: 'api',
+				war: 'target/*.war'
+			}
+		
+		}
+	
+	
+	}
+
+
+}
