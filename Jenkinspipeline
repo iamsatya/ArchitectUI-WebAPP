@@ -9,14 +9,14 @@ pipeline {
 		}
 		stage("CI Stage") {
 			steps {
-				sh "mvn compile"
+				sh "/opt/maven/bin/mvn compile"
 			}
 		
 		}
 		
 		stage("Creating an Artifact") {
 			steps {
-				sh "mvn package"
+				sh "/opt/maven/bin/mvn package"
 			}
 		
 		}
