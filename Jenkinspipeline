@@ -14,7 +14,7 @@ pipeline {
 		
 		}
 		
-		stage("CI Stage") {
+		stage("Creating an Artifact") {
 			steps {
 				sh "mvn package"
 			}
